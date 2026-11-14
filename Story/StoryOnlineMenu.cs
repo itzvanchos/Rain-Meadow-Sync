@@ -17,6 +17,7 @@ namespace RainMeadow
         private CheckBox reqCampaignSlug;
         private MenuLabel? lobbyLabel, slugcatLabel;
         private ButtonScroller? playerScrollBox;
+        private SimplerButton? syncSaveButton;
         private StoryMenuSlugcatSelector? slugcatSelector;
         private SlugcatCustomization personaSettings;
         private SlugcatStats.Name[] selectableSlugcats;
@@ -297,6 +298,11 @@ namespace RainMeadow
             if (nullLobbyError != null)
             {
                 base.Update();
+
+            if (syncSaveButton != null)
+            {
+                syncSaveButton.buttonBehav.greyedOut = !storyGameMode.saveToDisk;
+            }
                 return;
             }
             if (OnlineManager.lobby == null && nullLobbyError == null)
@@ -661,6 +667,36 @@ namespace RainMeadow
                 MatchmakingManager.currentInstance.OpenInvitationOverlay();
             };
             pages[0].subObjects.Add(invite);
+
+            syncSaveButton = new SimplerButton(
+                this,
+                pages[0],
+                "Sync to Single Player",
+                new Vector2(nextButton.pos.x + 80f, 95f),
+                new Vector2(180f, 35f));
+            syncSaveButton.OnClick += (_) =>
+            {
+                if (!storyGameMode.saveToDisk)
+                {
+                    new SimpleDialogBoxNotify(
+                        this,
+                        pages[0],
+                        "Enable Sync Save first. Clients can do this using the checkbox in the lobby menu.",
+                        buttonText: "OKAY");
+                    return;
+                }
+
+                bool success = RainMeadow.TrySyncMeadowSaveToSinglePlayer(
+                    manager.rainWorld.options.saveSlot,
+                    out string resultMessage);
+
+                new SimpleDialogBoxNotify(
+                    this,
+                    pages[0],
+                    resultMessage,
+                    buttonText: "OKAY");
+            };
+            pages[0].subObjects.Add(syncSaveButton);
 
             this.chatTextBoxPos = new Vector2(this.manager.rainWorld.options.ScreenSize.x * 0.001f + (1366f - this.manager.rainWorld.options.ScreenSize.x) / 2f, 0);
             var toggleChat = new SimplerSymbolButton(this, pages[0], "Kill_Slugcat", "", this.chatTextBoxPos);
