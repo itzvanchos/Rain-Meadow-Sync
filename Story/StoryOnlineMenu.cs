@@ -298,11 +298,6 @@ namespace RainMeadow
             if (nullLobbyError != null)
             {
                 base.Update();
-
-            if (syncSaveButton != null)
-            {
-                syncSaveButton.buttonBehav.greyedOut = !storyGameMode.saveToDisk;
-            }
                 return;
             }
             if (OnlineManager.lobby == null && nullLobbyError == null)
@@ -373,6 +368,11 @@ namespace RainMeadow
 
 
             base.Update();
+
+            if (syncSaveButton != null)
+            {
+                syncSaveButton.buttonBehav.greyedOut = !storyGameMode.saveToDisk;
+            }
 
             if (ModManager.JollyCoop)
             {
