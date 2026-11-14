@@ -686,7 +686,7 @@ namespace RainMeadow
                     return;
                 }
 
-                bool success = RainMeadow.TrySyncMeadowSaveToSinglePlayer(
+                RainMeadow.TrySyncMeadowSaveToSinglePlayer(
                     manager.rainWorld.options.saveSlot,
                     out string resultMessage);
 
