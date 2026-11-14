@@ -68,7 +68,16 @@ namespace RainMeadow
                 if (File.Exists(targetPath))
                 {
                     File.Copy(targetPath, backupPath, false);
-                    File.Replace(temporaryPath, targetPath, null);
+                    try
+                    {
+                        File.Replace(temporaryPath, targetPath, null);
+                    }
+                    catch (PlatformNotSupportedException)
+                    {
+                        // The backup already exists, so this fallback remains recoverable.
+                        File.Copy(temporaryPath, targetPath, true);
+                        File.Delete(temporaryPath);
+                    }
                 }
                 else
                 {
